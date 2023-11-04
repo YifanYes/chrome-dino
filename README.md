@@ -2,6 +2,8 @@
 
 This is a clone of the Google Chrome web browser dinosaur game.
 
+![Chrome Dino](./resources/chrome-dino.gif)
+
 To run locally, you will need Node.js installed on your system and the `live-server` package.
 
 To install the package:
