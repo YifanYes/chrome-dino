@@ -1,5 +1,6 @@
-import { generateDino, updateDino } from "./dino.js"
-import { generateGround, updateGround } from "./ground.js"
+import { generateCactus, getCactusLocation, updateCactus } from './cactus.js'
+import { generateDino, getDinoLocation, setDinoLose, updateDino } from './dino.js'
+import { generateGround, updateGround } from './ground.js'
 
 const WORLD_WIDTH = 100
 const WORLD_HEIGHT = 30
@@ -10,8 +11,8 @@ const scoreElement = document.querySelector('[data-score')
 const startScreenElement = document.querySelector('[data-start-screen')
 
 setPixelToWorldScale()
-window.addEventListener("resize", setPixelToWorldScale)
-document.addEventListener("keydown", handleStart, { once: true })
+window.addEventListener('resize', setPixelToWorldScale)
+document.addEventListener('keydown', handleStart, { once: true })
 
 let lastTime
 let speedScale
@@ -30,8 +31,11 @@ function update(time) {
 
   updateGround(delta, speedScale)
   updateDino(delta, speedScale)
+  updateCactus(delta, speedScale)
   updateSpeedScale(delta)
   updateScore(delta)
+
+  if (hasLost()) return handleLose()
 
   lastTime = time
   window.requestAnimationFrame(update)
@@ -52,8 +56,31 @@ function handleStart() {
   score = 0
   generateGround()
   generateDino()
-  startScreenElement.classList.add("hide")
+  generateCactus()
+  startScreenElement.classList.add('hide')
   window.requestAnimationFrame(update)
+}
+
+function handleLose() {
+  setDinoLose()
+
+  // Add delay to show you lost
+  setTimeout(() => {
+    document.addEventListener('keydown', handleStart, { once: true })
+    startScreenElement.classList.remove('hide')
+  }, 100)
+}
+
+function hasLost() {
+  const dinoLocation = getDinoLocation()
+  return getCactusLocation().some(location => hasCollided(location, dinoLocation))
+}
+
+function hasCollided(firstLocation, secondLocation) {
+  return firstLocation.left < secondLocation.right &&
+    firstLocation.top < secondLocation.bottom &&
+    firstLocation.right > secondLocation.left &&
+    firstLocation.bottom > secondLocation.top
 }
 
 // Scale world on screen dimensions

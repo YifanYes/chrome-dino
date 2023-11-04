@@ -1,4 +1,4 @@
-import { getProperty, incrementProperty, setProperty } from "./property.helper.js"
+import { getProperty, incrementProperty, setProperty } from './property.helper.js'
 
 const dinoElement = document.querySelector('[data-dino]')
 const JUMP_SPEED = 0.45
@@ -16,9 +16,9 @@ export function generateDino() {
   dinoFrame = 0
   currentFrameTime = 0
   yVelocity = 0
-  setProperty(dinoElement, "--bottom", 0)
-  document.removeEventListener("keydown", onJump)
-  document.addEventListener("keydown", onJump)
+  setProperty(dinoElement, '--bottom', 0)
+  document.removeEventListener('keydown', onJump)
+  document.addEventListener('keydown', onJump)
 }
 
 export function updateDino(delta, speedScale) {
@@ -44,11 +44,11 @@ function handleRun(delta, speedScale) {
 function handleJump(delta) {
   if (!isJumping) return
 
-  incrementProperty(dinoElement, "--bottom", yVelocity * delta)
+  incrementProperty(dinoElement, '--bottom', yVelocity * delta)
 
   // Check if dino is touching the ground to stop jumping
-  if (getProperty(dinoElement, "--bottom") <= 0) {
-    setProperty(dinoElement, "--bottom", 0)
+  if (getProperty(dinoElement, '--bottom') <= 0) {
+    setProperty(dinoElement, '--bottom', 0)
     isJumping = false
   }
 
@@ -56,9 +56,17 @@ function handleJump(delta) {
 }
 
 function onJump(event) {
-  if (event.code !== "Space" || isJumping) return
+  if (event.code !== 'Space' || isJumping) return
 
   console.log('JUMPING')
   yVelocity = JUMP_SPEED
   isJumping = true
+}
+
+export function getDinoLocation() {
+  return dinoElement.getBoundingClientRect()
+}
+
+export function setDinoLose() {
+  dinoElement.src = 'resources/dino-lose.png'
 }
